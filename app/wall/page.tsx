@@ -273,11 +273,16 @@ function SlideView({
         <figcaption className="flex h-[6.5vh] items-center px-[0.6vh] font-mono text-[2.5vh] text-ink">
           <span className="w-0 flex-1 truncate">{item.author && `${item.type === "video" ? "video" : "foto"} di ${item.author}`}</span>
         </figcaption>
+        {/* stamped on its own paper tag clipped to the corner: never over the author line, readable on any photo */}
         {isNew && ready && (
-          <span className="inchiostro pointer-events-none absolute bottom-[0.9vh] right-[2.5vh] -rotate-[4deg] animate-stampa px-[2vh] py-[1.2vh] font-mono text-[2.8vh] font-bold uppercase tracking-[0.2em] text-stamp mix-blend-multiply [animation-delay:600ms]">
-            <Cornice className="inset-[0.2vh]" width={3} />
-            <Cornice className="inset-[0.8vh]" width={1.2} />
-            Appena {item.type === "video" ? "arrivato" : "arrivata"}
+          <span className="carta pointer-events-none absolute -right-[2.2vh] -top-[2.4vh] rotate-[6deg] animate-stampa p-[1vh] shadow-[0_0.3vh_0.6vh_rgb(0_0_0/0.45)] [animation-delay:600ms]">
+            <span className="inchiostro relative block px-[1.6vh] py-[1.1vh] text-center font-mono text-[2.3vh] font-bold uppercase leading-[1.15] tracking-[0.18em] text-stamp mix-blend-multiply">
+              <Cornice className="inset-0" width={2.6} />
+              <Cornice className="inset-[0.55vh]" width={1} />
+              Appena
+              <br />
+              {item.type === "video" ? "arrivato" : "arrivata"}
+            </span>
           </span>
         )}
       </figure>
