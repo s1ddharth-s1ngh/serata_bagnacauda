@@ -31,8 +31,6 @@ export default function WallPage() {
   const appliedSeq = useRef(0);
 
   const [slides, setSlides] = useState<Slide[]>([]); // at most [shown, loading]: the new print drops on the old one, never an empty table
-  const [count, setCount] = useState<number | null>(null);
-  const [live, setLive] = useState(false);
   const [fullscreen, setFullscreen] = useState(false);
   const [qr, setQr] = useState<{ src: string; label: string } | null>(null);
 
@@ -86,7 +84,6 @@ export default function WallPage() {
     const firstLoad = appliedSeq.current === 0;
     appliedSeq.current = seq;
     const added = syncDeck(deck.current, data as Media[], !firstLoad);
-    setCount(data.length);
     const current = active.current;
     const hidden = current && !data.some((m) => m.id === current.item.id);
     // new arrivals show right away, but never cut another new arrival short
@@ -105,7 +102,6 @@ export default function WallPage() {
       channel = ch;
       ch.subscribe((status) => {
         if (ch !== channel) return; // an old channel being torn down
-        setLive(status === "SUBSCRIBED");
         if (status === "SUBSCRIBED") sync(); // catch up on anything missed while disconnected
         else {
           clearTimeout(retry);
@@ -198,15 +194,6 @@ export default function WallPage() {
           ) : (
             <div className="relative mt-[2.2vh] size-[var(--qr)] bg-white" />
           )}
-          <div className="relative rotate-[1.5deg]">
-            <p className="mt-[1.6vh] font-mono text-[1.7vh] tracking-wide">{qr?.label}</p>
-            <p
-              className="mt-[0.4vh] font-mono text-[1.5vh] text-ink/70"
-              title={live ? "Realtime connesso" : "Realtime non connesso: aggiorno ogni 15 secondi"}
-            >
-              {live ? "●" : "○"} {count ? `${count} ${count === 1 ? "invio" : "invii"} finora` : "in attesa del primo invio"}
-            </p>
-          </div>
         </aside>
       </div>
 
