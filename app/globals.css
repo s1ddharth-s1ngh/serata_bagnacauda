@@ -1,0 +1,69 @@
+@import "tailwindcss";
+
+/* Menù d'osteria di Langa: carta da salumiere, inchiostro, un solo rosso da timbro. */
+@theme {
+  --color-paper: #f1e8d6;
+  --color-ink: #231a14;
+  --color-stamp: #b3261e;
+  --color-print: #f7f3ea; /* bordo bianco delle stampe fotografiche */
+
+  /* solo /admin */
+  --color-cream: #f5ead3;
+  --color-ember: #2b1a10;
+  --color-terracotta: #c4552d;
+  --color-oil: #e2ad3b;
+  --color-cardoon: #8c9a52;
+
+  /* timbro: scende sulla carta e si ferma, niente rimbalzo */
+  --animate-stampa: stampa 0.3s cubic-bezier(0.55, 0, 0.9, 0.45) both;
+  /* stampa che cade sul tavolo; durata = DROP_MS in app/wall/page.tsx */
+  --animate-cade: cade 0.7s cubic-bezier(0.2, 0.7, 0.3, 1) both;
+
+  @keyframes stampa {
+    from { opacity: 0; scale: 1.35; }
+    to { opacity: 1; scale: 1; }
+  }
+  @keyframes cade {
+    from { opacity: 0; scale: 1.06; rotate: calc(var(--r) * 3); translate: calc(var(--r) * 0.4vw) calc(var(--r) * -0.3vh - 4vh); }
+    35% { opacity: 1; }
+    to { opacity: 1; scale: 1; rotate: var(--r); translate: calc(var(--r) * 0.4vw) calc(var(--r) * -0.3vh); }
+  }
+}
+
+@theme inline {
+  --font-serif: var(--font-fell), Georgia, serif;
+  --font-mono: var(--font-courier), "Courier New", monospace;
+}
+
+/* Carta: grana fine + macchie larghe, solo feTurbulence. */
+@utility carta {
+  background-color: var(--color-paper);
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='g' color-interpolation-filters='sRGB'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .2 0 0 0 0 .13 0 0 0 0 .07 .45 0 0 0 -.18'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='700' height='700'%3E%3Cfilter id='m' color-interpolation-filters='sRGB'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.005 .011' numOctaves='3' seed='5' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .55 0 0 0 0 .4 0 0 0 0 .2 .25 0 0 0 -.09'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23m)'/%3E%3C/svg%3E");
+}
+
+/* Tavolo d'osteria in legno scuro: venature stirate in orizzontale, assi da 360px. */
+@utility legno {
+  background-color: #382518;
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='g' color-interpolation-filters='sRGB'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .05 0 0 0 0 .03 0 0 0 0 .02 .8 0 0 0 -.3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1400' height='360'%3E%3Cfilter id='w' x='0' y='0' width='100%25' height='100%25' color-interpolation-filters='sRGB'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.0014 .032' numOctaves='5' seed='11' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .05 0 0 0 0 .03 0 0 0 0 .015 .85 0 0 0 -.28'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23w)'/%3E%3Crect y='357' width='100%25' height='3' fill='%23100a06'/%3E%3C/svg%3E");
+}
+
+/* Inchiostro da timbro: puntinato fine e zone più scariche (due maschere di rumore intersecate). */
+@utility inchiostro {
+  --ink-dots: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260'%3E%3Cfilter id='i' x='0' y='0' width='100%25' height='100%25' color-interpolation-filters='sRGB'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.6' numOctaves='3' seed='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -9 0 0 0 6.1'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23i)'/%3E%3C/svg%3E");
+  --ink-fade: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='600'%3E%3Cfilter id='f' x='0' y='0' width='100%25' height='100%25' color-interpolation-filters='sRGB'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.012' numOctaves='2' seed='9' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1.4 0 0 0 .35'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23f)'/%3E%3C/svg%3E");
+  -webkit-mask-image: var(--ink-dots), var(--ink-fade);
+  mask-image: var(--ink-dots), var(--ink-fade);
+  -webkit-mask-size: 260px 260px, 600px 600px;
+  mask-size: 260px 260px, 600px 600px;
+  -webkit-mask-composite: source-in;
+  mask-composite: intersect;
+}
+
+::selection {
+  background: var(--color-ink);
+  color: var(--color-paper);
+}
