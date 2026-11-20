@@ -1,7 +1,10 @@
 "use client";
 
 import { useCallback, useEffect, useState, type FormEvent } from "react";
-import { publicUrl } from "@/lib/supabase";
+import { publicUrl, SUPABASE_URL } from "@/lib/supabase";
+
+// Supabase Edge Function (supabase/functions/admin): the static site has no server of its own.
+const API = `${SUPABASE_URL}/functions/v1/admin`;
 
 type Media = {
   id: string;
@@ -18,7 +21,7 @@ const KEY = "admin-password";
 
 async function fetchMedia(pw: string): Promise<Result> {
   try {
-    const res = await fetch("/api/admin", { headers: { "x-admin-password": pw }, cache: "no-store" });
+    const res = await fetch(API, { headers: { "x-admin-password": pw }, cache: "no-store" });
     const body = await res.json().catch(() => ({}));
     if (res.ok) return { ok: true, media: body.media };
     return { ok: false, status: res.status, error: body.error ?? `Errore del server (${res.status}).` };
@@ -69,7 +72,7 @@ export default function AdminPage() {
     if (!password) return;
     setBusyId(item.id);
     try {
-      const res = await fetch("/api/admin", {
+      const res = await fetch(API, {
         method: "POST",
         headers: { "x-admin-password": password, "content-type": "application/json" },
         body: JSON.stringify({ id: item.id, hidden: !item.hidden }),

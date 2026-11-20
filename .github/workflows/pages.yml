@@ -1,0 +1,48 @@
+# Every push to main rebuilds the static site and publishes it on
+# https://s1ddharth-s1ngh.github.io/serata_bagnacauda/ (Settings > Pages > Source: GitHub Actions).
+name: Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+        env:
+          PAGES_BASE_PATH: /serata_bagnacauda
+          # Public values only (they ship to every browser anyway). The service key never goes here.
+          NEXT_PUBLIC_SUPABASE_URL: https://ceibiojkadggtwolnaab.supabase.co
+          NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: sb_publishable_4dFbz5EPURrgEkyNqMbD3A_eJaG4io0
+          NEXT_PUBLIC_SITE_URL: https://s1ddharth-s1ngh.github.io/serata_bagnacauda
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: out
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

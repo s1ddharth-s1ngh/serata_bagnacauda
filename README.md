@@ -2,9 +2,12 @@
 
 - `/upload`: pagina ospiti (quella del QR), upload TUS resumable su Supabase Storage.
 - `/wall`: proiettore 16:9 con QR + slideshow in tempo reale.
-- `/admin`: nasconde i contenuti inopportuni (password `ADMIN_PASSWORD`).
+- `/admin`: nasconde i contenuti inopportuni. Parla con la Edge Function Supabase `supabase/functions/admin` (password = secret `ADMIN_PASSWORD`).
 
-Variabili: vedi `.env.local.example`. Testi dell'evento: `lib/event.ts`.
+Sito pubblico: https://s1ddharth-s1ngh.github.io/serata_bagnacauda/ (export statico, pubblicato da `.github/workflows/pages.yml` a ogni push su `main`).
+Edge Function: si aggiorna con `supabase functions deploy admin --no-verify-jwt`.
+
+Variabili locali: vedi `.env.local.example`. Testi dell'evento: `lib/event.ts`.
 
 ```bash
 npm run dev            # locale
